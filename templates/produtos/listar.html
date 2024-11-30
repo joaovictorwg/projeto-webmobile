@@ -1,0 +1,48 @@
+{% extends '../base.html' %}
+
+{% load static %}
+
+{% block navbar %}
+  {% include 'components/navbar.html' %}
+{% endblock %}
+
+{% block title %}Listagem{% endblock %}
+
+<!-- Testando o tamanho da lista de produtos -->
+<p>Total de produtos: {{ produtos|length }}</p>
+
+<!-- Testando a impressão de todos os produtos -->
+<pre>{{ produtos }}</pre>
+
+{% block list %}
+  <div class="div-lista">
+    <h1>Lista de Produtos</h1>
+    <div class="row">
+      {% for p in produtos %}  <!-- Corrigido para produtos -->
+        <div class="col-sm-6 col-md-4 col-lg-3 mb-4"> <!-- Responsividade: 2 colunas para telas pequenas, 3 para médias, 4 para grandes -->
+          <div class="card h-100"> <!-- h-100 para garantir que todos os cards tenham a mesma altura -->
+            {% if p.foto %}
+              <img class="card-img-top" src="{{ p.foto.url }}" alt="{{ p.titulo }}">
+            {% else %}
+              <img class="card-img-top" src="{% static 'default-image.jpg' %}" alt="Imagem padrão">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ p.titulo }}</h5>
+              <p class="card-text">Descrição: {{ p.descricao }}</p>
+              <p class="card-text">Estado: {{ p.get_estado_display }}</p>
+              <p class="card-text">Categoria: {{ p.get_categoria_display }}</p>
+              <a class="button" href="{% url 'editar-produtos' p.id %}">Editar</a>
+              <a class="button" href="{% url 'deletar-produtos' p.id %}">Deletar</a>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <p>Não há produtos disponíveis no momento.</p>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block footer %}
+  {% include 'components/footer.html' %}
+{% endblock %}
